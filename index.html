@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎉 Birthday Surprise! 🎂</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            overflow-x: hidden;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .initial-screen {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            text-align: center;
+            color: white;
+        }
+
+        .initial-screen h1 {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .surprise-btn {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            border: none;
+            padding: 20px 40px;
+            font-size: 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(238, 90, 36, 0.3);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        .surprise-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(238, 90, 36, 0.4);
+        }
+
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 1000;
+        }
+
+        .loader {
+            width: 80px;
+            height: 80px;
+            border: 8px solid rgba(255,255,255,0.3);
+            border-top: 8px solid #ff6b6b;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 2rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            color: white;
+            font-size: 1.5rem;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .progress-bar {
+            width: 300px;
+            height: 10px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b6b, #ee5a24);
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 5px;
+        }
+
+        .birthday-content {
+            display: none;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 2rem;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .birthday-title {
+            font-size: 4rem;
+            margin-bottom: 2rem;
+            animation: bounceIn 1s ease-out;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .birthday-message {
+            font-size: 1.5rem;
+            margin-bottom: 3rem;
+            animation: fadeInUp 1s ease-out 0.5s both;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        @keyframes fadeInUp {
+            0% { transform: translateY(30px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        .balloon {
+            position: absolute;
+            width: 40px;
+            height: 60px;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .balloon:nth-child(1) { background: #ff6b6b; left: 10%; animation-delay: 0s; }
+        .balloon:nth-child(2) { background: #4ecdc4; left: 20%; animation-delay: 0.5s; }
+        .balloon:nth-child(3) { background: #45b7d1; left: 80%; animation-delay: 1s; }
+        .balloon:nth-child(4) { background: #f9ca24; left: 90%; animation-delay: 1.5s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(-5deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #ff6b6b;
+            animation: confetti-fall 3s linear infinite;
+        }
+
+        @keyframes confetti-fall {
+            0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+
+        .sparkle {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, #fff 20%, transparent 20%);
+            border-radius: 50%;
+            animation: sparkle 2s ease-in-out infinite;
+        }
+
+        @keyframes sparkle {
+            0%, 100% { opacity: 0; transform: scale(0); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+
+        .cake-icon {
+            font-size: 6rem;
+            margin: 2rem 0;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .celebration-buttons {
+            margin-top: 3rem;
+            animation: fadeInUp 1s ease-out 1s both;
+        }
+
+        .celebration-btn {
+            background: linear-gradient(45deg, #4ecdc4, #45b7d1);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            margin: 0 10px;
+            font-size: 1.2rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(69, 183, 209, 0.3);
+        }
+
+        .celebration-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(69, 183, 209, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            .birthday-title { font-size: 2.5rem; }
+            .birthday-message { font-size: 1.2rem; padding: 0 1rem; }
+            .cake-icon { font-size: 4rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Initial Screen -->
+    <div class="initial-screen" id="initialScreen">
+        <h1>🎁 Something Special Awaits! 🎁</h1>
+        <button class="surprise-btn" onclick="startSurprise()">SURPRISE ME!</button>
+    </div>
+
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loader"></div>
+        <div class="loading-text" id="loadingText">Preparing your surprise...</div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+    </div>
+
+    <!-- Birthday Content -->
+    <div class="birthday-content" id="birthdayContent">
+        <div class="balloon"></div>
+        <div class="balloon"></div>
+        <div class="balloon"></div>
+        <div class="balloon"></div>
+        
+        <h1 class="birthday-title">🎉 HAPPY BIRTHDAY! 🎉</h1>
+        
+        <div class="cake-icon">🎂</div>
+        
+        <p class="birthday-message">
+            Today is your special day! May this new year of your life be filled with joy, laughter, 
+            love, and countless beautiful memories. You deserve all the happiness in the world!
+        </p>
+        
+        <div class="celebration-buttons">
+            <button class="celebration-btn" onclick="createFireworks()">🎆 Fireworks</button>
+            <button class="celebration-btn" onclick="playBirthdayMusic()">🎵 Music</button>
+            <button class="celebration-btn" onclick="showWishes()">💝 Wishes</button>
+        </div>
+    </div>
+
+    <script>
+        let confettiInterval;
+        let sparkleInterval;
+
+        function startSurprise() {
+            const initialScreen = document.getElementById('initialScreen');
+            const loadingScreen = document.getElementById('loadingScreen');
+            const birthdayContent = document.getElementById('birthdayContent');
+            const progressFill = document.getElementById('progressFill');
+            const loadingText = document.getElementById('loadingText');
+
+            initialScreen.style.display = 'none';
+            loadingScreen.style.display = 'flex';
+
+            const loadingMessages = [
+                "Preparing your surprise...",
+                "Inflating balloons...",
+                "Decorating the party...",
+                "Adding sparkles...",
+                "Getting the cake ready...",
+                "Almost there..."
+            ];
+
+            let progress = 0;
+            let messageIndex = 0;
+
+            const loadingInterval = setInterval(() => {
+                progress += Math.random() * 20 + 5;
+                if (progress > 100) progress = 100;
+                
+                progressFill.style.width = progress + '%';
+                
+                if (messageIndex < loadingMessages.length) {
+                    loadingText.textContent = loadingMessages[messageIndex];
+                    messageIndex++;
+                }
+
+                if (progress >= 100) {
+                    clearInterval(loadingInterval);
+                    setTimeout(() => {
+                        loadingScreen.style.display = 'none';
+                        birthdayContent.style.display = 'block';
+                        startCelebration();
+                    }, 500);
+                }
+            }, 800);
+        }
+
+        function startCelebration() {
+            createConfetti();
+            createSparkles();
+        }
+
+        function createConfetti() {
+            confettiInterval = setInterval(() => {
+                for (let i = 0; i < 3; i++) {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.backgroundColor = getRandomColor();
+                    confetti.style.animationDelay = Math.random() * 2 + 's';
+                    document.body.appendChild(confetti);
+
+                    setTimeout(() => confetti.remove(), 3000);
+                }
+            }, 300);
+        }
+
+        function createSparkles() {
+            sparkleInterval = setInterval(() => {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'sparkle';
+                sparkle.style.left = Math.random() * 100 + '%';
+                sparkle.style.top = Math.random() * 100 + '%';
+                sparkle.style.animationDelay = Math.random() * 2 + 's';
+                document.body.appendChild(sparkle);
+
+                setTimeout(() => sparkle.remove(), 2000);
+            }, 500);
+        }
+
+        function getRandomColor() {
+            const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7'];
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+
+        function createFireworks() {
+            for (let i = 0; i < 10; i++) {
+                setTimeout(() => {
+                    const firework = document.createElement('div');
+                    firework.innerHTML = '✨';
+                    firework.style.position = 'absolute';
+                    firework.style.fontSize = '2rem';
+                    firework.style.left = Math.random() * 90 + '%';
+                    firework.style.top = Math.random() * 70 + '%';
+                    firework.style.animation = 'bounceIn 0.5s ease-out';
+                    document.body.appendChild(firework);
+
+                    setTimeout(() => firework.remove(), 1000);
+                }, i * 200);
+            }
+        }
+
+        function playBirthdayMusic() {
+            // Create visual music notes animation
+            for (let i = 0; i < 8; i++) {
+                setTimeout(() => {
+                    const note = document.createElement('div');
+                    note.innerHTML = ['🎵', '🎶', '🎼'][Math.floor(Math.random() * 3)];
+                    note.style.position = 'absolute';
+                    note.style.fontSize = '2rem';
+                    note.style.left = Math.random() * 90 + '%';
+                    note.style.top = Math.random() * 70 + '%';
+                    note.style.animation = 'float 2s ease-in-out';
+                    document.body.appendChild(note);
+
+                    setTimeout(() => note.remove(), 2000);
+                }, i * 300);
+            }
+        }
+
+        function showWishes() {
+            const wishes = [
+                "May all your dreams come true! 🌟",
+                "Wishing you love and happiness! 💕",
+                "Have an amazing year ahead! 🎊",
+                "You're absolutely wonderful! ✨",
+                "Celebrate and enjoy your day! 🥳"
+            ];
+
+            const randomWish = wishes[Math.floor(Math.random() * wishes.length)];
+            
+            const wishDiv = document.createElement('div');
+            wishDiv.innerHTML = randomWish;
+            wishDiv.style.position = 'fixed';
+            wishDiv.style.top = '50%';
+            wishDiv.style.left = '50%';
+            wishDiv.style.transform = 'translate(-50%, -50%)';
+            wishDiv.style.fontSize = '2rem';
+            wishDiv.style.color = '#fff';
+            wishDiv.style.textShadow = '2px 2px 4px rgba(0,0,0,0.5)';
+            wishDiv.style.backgroundColor = 'rgba(0,0,0,0.3)';
+            wishDiv.style.padding = '2rem';
+            wishDiv.style.borderRadius = '15px';
+            wishDiv.style.zIndex = '9999';
+            wishDiv.style.animation = 'bounceIn 0.5s ease-out';
+            document.body.appendChild(wishDiv);
+
+            setTimeout(() => wishDiv.remove(), 3000);
+        }
+    </script>
+</body>
+</html>
